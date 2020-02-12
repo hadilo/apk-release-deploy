@@ -258,11 +258,11 @@ if __name__ == '__main__':
     options = parser.parse_args()
 
     # Extract app version and file
-    '''app_version, app_file = get_app(options.release_dir)
+    app_version, app_file = get_app(options.release_dir)
     if app_version == None or app_file == None:
-        exit(OUTPUT_FILE_PARSING_ERROR)'''
+        exit(OUTPUT_FILE_PARSING_ERROR)
 
-    '''target_app_file = get_target_file_name(options.app_name, app_version)'''
+    target_app_file = get_target_file_name(options.app_name, app_version)
 
     # Upload app file and get shared url
     # file_url = upload_to_dropbox(target_app_file, app_file, options.dropbox_token, options.dropbox_folder)
@@ -270,19 +270,17 @@ if __name__ == '__main__':
     #     exit(DROPBOX_ERROR_CODE)
 
     # Extract latest changes
-    '''latest_changes = get_changes(options.changelog_file)
+    latest_changes = get_changes(options.changelog_file)
     if latest_changes == None:
-        exit(CHANGES_ERROR_CODE)'''
+        exit(CHANGES_ERROR_CODE)
 
     # Compose email subject and body
-    app_version = 1
     file_url = "http://file_url"
-    latest_changes = "2020-01-31"
 
     subject, body = get_email(options.app_name, app_version, file_url, latest_changes, options.template_file)
     if subject == None or body == None:
         exit(TEMPLATE_ERROR_CODE)
 
     # Send email with release data
-    if not send_email(options.zapier_hook, options.email_to, subject, body):
+    if not send_email(options.zapier_hook, options.zapier_auth, options.email_to, subject, body):
         exit(ZAPIER_ERROR_CODE)
