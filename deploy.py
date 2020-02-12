@@ -245,8 +245,8 @@ def get_email(app_name, app_version, app_url, changes, template_file_path):
 if __name__ == '__main__':
     # Command line arguments
     parser = argparse.ArgumentParser()
-    # parser.add_argument('--release.dir', dest='release_dir', help='path to release folder', required=True)
-    # parser.add_argument('--app.name', dest='app_name', help='app name that will be used as file name', required=True)
+    parser.add_argument('--release.dir', dest='release_dir', help='path to release folder', required=True)
+    parser.add_argument('--app.name', dest='app_name', help='app name that will be used as file name', required=True)
     parser.add_argument('--changelog.file', dest='changelog_file', help='path to changelog file', required=True)
     parser.add_argument('--template.file', dest='template_file', help='path to email template file', required=True)
     # parser.add_argument('--dropbox.token', dest='dropbox_token', help='dropbox access token', required=True)
