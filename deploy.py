@@ -121,7 +121,8 @@ def send_email(zapier_hook, zapier_auth_prefix, zapier_auth, to, subject, body):
     ZAPIER_SEND_DATA['subject'] = subject
     ZAPIER_SEND_DATA['body'] = body
 
-    headers = {'Authorization': zapier_auth_prefix zapier_auth}
+    auth = zapier_auth_prefix + " " + zapier_auth
+    headers = {'Authorization': auth}
     headers = {'Content-Type': 'application/json'}
 
     r = requests.post(zapier_hook, data=json.dumps(ZAPIER_SEND_DATA), headers=headers)
