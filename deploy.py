@@ -58,7 +58,7 @@ ZAPIER_SEND_DATA = {
 
 def upload_to_dropbox(target_file_name, source_file, dropbox_token, dropbox_folder):
     '''Upload file to dropbox
-    
+
     Args:
         target_file_name (str): Uploaded file will be rename to this file name.
         source_file (str): File that is going to be uploaded.
@@ -77,7 +77,7 @@ def upload_to_dropbox(target_file_name, source_file, dropbox_token, dropbox_fold
     # It's possible to overwrite but this way is cleaner
     headers = {'Authorization': 'Bearer ' + dropbox_token,
             'Content-Type': 'application/json'}
-    
+
     requests.post(DROPBOX_DELETE_URL, data=json.dumps(DROPBOX_DELETE_DATA), headers=headers)
 
     headers = {'Authorization': 'Bearer ' + dropbox_token,
@@ -105,9 +105,9 @@ def upload_to_dropbox(target_file_name, source_file, dropbox_token, dropbox_fold
     return re.sub('dl=.*', 'raw=1', r.json()['url'])
 
 
-def send_email(zapier_hook, to, subject, body):
+def send_email(zapier_hook, zapier_auth, to, subject, body):
     '''Send email with zapier hook
-    
+
     Args:
         zapier_hook (str): Zapier hook url.
         to (str): Email recipients separated by comma.
@@ -121,6 +121,7 @@ def send_email(zapier_hook, to, subject, body):
     ZAPIER_SEND_DATA['subject'] = subject
     ZAPIER_SEND_DATA['body'] = body
 
+    headers = {'Authorization': zapier_auth}
     headers = {'Content-Type': 'application/json'}
 
     r = requests.post(zapier_hook, data=json.dumps(ZAPIER_SEND_DATA), headers=headers)
@@ -130,7 +131,7 @@ def send_email(zapier_hook, to, subject, body):
 
 def get_app(release_dir):
     '''Extract app data
-    
+
     Args:
         release_dir (str): Path to release directory.
 
@@ -161,7 +162,7 @@ def get_target_file_name(app_name, app_version):
     app_name - MyApp
     version - 1.03
     result: myapp_1_03.apk
-    
+
     Args:
         app_name (str): App name.
         app_version (str): App version.
@@ -224,7 +225,7 @@ def get_email(app_name, app_version, app_url, changes, template_file_path):
             app_name=app_name,
             app_version=app_version
         )
-        
+
     # Iterate over each line and collect lines marked for subject/body
     for line in template.splitlines():
         if line.startswith('#'):
@@ -237,46 +238,51 @@ def get_email(app_name, app_version, app_url, changes, template_file_path):
                 subject += line + '\n'
             elif target == target_body:
                 body += line + '\n'
-    
+
     return subject.rstrip(), body.rstrip()
 
 
 if __name__ == '__main__':
     # Command line arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument('--release.dir', dest='release_dir', help='path to release folder', required=True)
-    parser.add_argument('--app.name', dest='app_name', help='app name that will be used as file name', required=True)
-    parser.add_argument('--changelog.file', dest='changelog_file', help='path to changelog file', required=True)
+    # parser.add_argument('--release.dir', dest='release_dir', help='path to release folder', required=True)
+    # parser.add_argument('--app.name', dest='app_name', help='app name that will be used as file name', required=True)
+    # parser.add_argument('--changelog.file', dest='changelog_file', help='path to changelog file', required=True)
     parser.add_argument('--template.file', dest='template_file', help='path to email template file', required=True)
-    parser.add_argument('--dropbox.token', dest='dropbox_token', help='dropbox access token', required=True)
-    parser.add_argument('--dropbox.folder', dest='dropbox_folder', help='dropbox target folder', required=True)
+    # parser.add_argument('--dropbox.token', dest='dropbox_token', help='dropbox access token', required=True)
+    # parser.add_argument('--dropbox.folder', dest='dropbox_folder', help='dropbox target folder', required=True)
     parser.add_argument('--zapier.hook', dest='zapier_hook', help='zapier email web hook', required=True)
+    parser.add_argument('--zapier.auth', dest='zapier_auth', help='zapier email web hook key', required=True)
     parser.add_argument('--email.to', dest='email_to', help='email recipients', required=True)
 
     options = parser.parse_args()
 
     # Extract app version and file
-    app_version, app_file = get_app(options.release_dir)
+    '''app_version, app_file = get_app(options.release_dir)
     if app_version == None or app_file == None:
-        exit(OUTPUT_FILE_PARSING_ERROR)
-    
-    target_app_file = get_target_file_name(options.app_name, app_version)
+        exit(OUTPUT_FILE_PARSING_ERROR)'''
+
+    '''target_app_file = get_target_file_name(options.app_name, app_version)'''
 
     # Upload app file and get shared url
-    file_url = upload_to_dropbox(target_app_file, app_file, options.dropbox_token, options.dropbox_folder)
-    if file_url == None:
-        exit(DROPBOX_ERROR_CODE)
-    
+    # file_url = upload_to_dropbox(target_app_file, app_file, options.dropbox_token, options.dropbox_folder)
+    # if file_url == None:
+    #     exit(DROPBOX_ERROR_CODE)
+
     # Extract latest changes
-    latest_changes = get_changes(options.changelog_file)
+    '''latest_changes = get_changes(options.changelog_file)
     if latest_changes == None:
-        exit(CHANGES_ERROR_CODE)
-    
+        exit(CHANGES_ERROR_CODE)'''
+
     # Compose email subject and body
+    app_version = 1
+    file_url = "http://file_url"
+    latest_changes = "2020-01-31"
+
     subject, body = get_email(options.app_name, app_version, file_url, latest_changes, options.template_file)
     if subject == None or body == None:
         exit(TEMPLATE_ERROR_CODE)
-    
+
     # Send email with release data
     if not send_email(options.zapier_hook, options.email_to, subject, body):
         exit(ZAPIER_ERROR_CODE)
