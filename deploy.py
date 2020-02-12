@@ -105,7 +105,7 @@ def upload_to_dropbox(target_file_name, source_file, dropbox_token, dropbox_fold
     return re.sub('dl=.*', 'raw=1', r.json()['url'])
 
 
-def send_email(zapier_hook, zapier_auth, to, subject, body):
+def send_email(zapier_hook, zapier_auth_prefix, zapier_auth, to, subject, body):
     '''Send email with zapier hook
 
     Args:
@@ -121,7 +121,7 @@ def send_email(zapier_hook, zapier_auth, to, subject, body):
     ZAPIER_SEND_DATA['subject'] = subject
     ZAPIER_SEND_DATA['body'] = body
 
-    headers = {'Authorization': zapier_auth}
+    headers = {'Authorization': zapier_auth_prefix zapier_auth}
     headers = {'Content-Type': 'application/json'}
 
     r = requests.post(zapier_hook, data=json.dumps(ZAPIER_SEND_DATA), headers=headers)
@@ -252,6 +252,7 @@ if __name__ == '__main__':
     # parser.add_argument('--dropbox.token', dest='dropbox_token', help='dropbox access token', required=True)
     # parser.add_argument('--dropbox.folder', dest='dropbox_folder', help='dropbox target folder', required=True)
     parser.add_argument('--zapier.hook', dest='zapier_hook', help='zapier email web hook', required=True)
+    parser.add_argument('--zapier.authprefix', dest='zapier_auth_prefix', help='zapier email web hook prefix', required=True)
     parser.add_argument('--zapier.auth', dest='zapier_auth', help='zapier email web hook key', required=True)
     parser.add_argument('--email.to', dest='email_to', help='email recipients', required=True)
 
@@ -282,5 +283,5 @@ if __name__ == '__main__':
         exit(TEMPLATE_ERROR_CODE)
 
     # Send email with release data
-    if not send_email(options.zapier_hook, options.zapier_auth, options.email_to, subject, body):
+    if not send_email(options.zapier_hook, options.zapier_auth_prefix, options.zapier_auth, options.email_to, subject, body):
         exit(ZAPIER_ERROR_CODE)
