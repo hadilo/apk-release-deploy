@@ -277,7 +277,7 @@ if __name__ == '__main__':
         exit(CHANGES_ERROR_CODE)
 
     # Compose email subject and body
-    file_url = "http://file_url"
+    file_url = "http://fileurl.co/asa.apk"
 
     subject, body = get_email(options.app_name, app_version, file_url, latest_changes, options.template_file)
     if subject == None or body == None:
