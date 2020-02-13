@@ -152,7 +152,7 @@ def send_email(zapier_hook, zapier_auth_prefix, zapier_auth, to, subject, body):
     print(auth + "\n" + json.dumps(SENDGRID_EMAIL_DATA))
 
     r = requests.post("https://api.sendgrid.com/v3/mail/send", data=json.dumps(SENDGRID_EMAIL_DATA), headers=headers)
-
+    print(r.status_code)
     return r.status_code == requests.codes.ok
 
 
