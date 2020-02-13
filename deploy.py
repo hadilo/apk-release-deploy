@@ -279,11 +279,11 @@ if __name__ == '__main__':
     # Compose email subject and body
     file_url = "http://fileurl.co/asa.apk"
 
-#     subject, body = get_email(options.app_name, app_version, file_url, latest_changes, options.template_file)
-#     if subject == None or body == None:
-#         exit(TEMPLATE_ERROR_CODE)
+    subject, body = get_email(options.app_name, app_version, file_url, latest_changes, options.template_file)
+    if subject == None or body == None:
+        exit(TEMPLATE_ERROR_CODE)
 
-    print(options.zapier_hook + "\n" + options.zapier_auth_prefix + "\n" + options.zapier_auth + "\n" + options.email_to + "\n" + "subject" + "\n" + "body")
+    print(options.zapier_hook + "\n" + options.zapier_auth_prefix + "\n" + options.zapier_auth + "\n" + options.email_to + "\n" + subject + "\n" + body)
     # Send email with release data
     # if not send_email(options.zapier_hook, options.zapier_auth_prefix, options.zapier_auth, options.email_to, subject, body):
     #     exit(ZAPIER_ERROR_CODE)
