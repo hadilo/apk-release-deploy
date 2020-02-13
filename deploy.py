@@ -149,6 +149,8 @@ def send_email(zapier_hook, zapier_auth_prefix, zapier_auth, to, subject, body):
     headers = {'Authorization': auth}
     headers = {'Content-Type': 'application/json'}
 
+    print(auth + "\n" + SENDGRID_EMAIL_DATA)
+
     r = requests.post(zapier_hook, data=json.dumps(SENDGRID_EMAIL_DATA), headers=headers)
 
     return r.status_code == requests.codes.ok
