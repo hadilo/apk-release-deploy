@@ -308,7 +308,6 @@ if __name__ == '__main__':
     if subject == None or body == None:
         exit(TEMPLATE_ERROR_CODE)
 
-    '''
     print(options.zapier_hook + "\n" + options.zapier_auth_prefix + "\n" + options.zapier_auth + "\n" + options.email_to + "\n" + subject + "\n" + body)
 
     # Send email with release data
