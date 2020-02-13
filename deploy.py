@@ -142,15 +142,15 @@ def send_email(zapier_hook, zapier_auth_prefix, zapier_auth, to, subject, body):
     # ZAPIER_SEND_DATA['subject'] = subject
     # ZAPIER_SEND_DATA['body'] = body
 
-    aaa['personalizations']['to']['email'] = to
-    aaa['subject'] = subject
-    aaa['content']['value'] = body
+    SENDGRID_EMAIL_DATA['personalizations']['to']['email'] = to
+    SENDGRID_EMAIL_DATA['subject'] = subject
+    SENDGRID_EMAIL_DATA['content']['value'] = body
 
     auth = zapier_auth_prefix + " " + zapier_auth
     headers = {'Authorization': auth}
     headers = {'Content-Type': 'application/json'}
 
-    r = requests.post(zapier_hook, data=json.dumps(aaa), headers=headers)
+    r = requests.post(zapier_hook, data=json.dumps(SENDGRID_EMAIL_DATA), headers=headers)
 
     return r.status_code == requests.codes.ok
 
