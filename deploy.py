@@ -125,7 +125,7 @@ def upload_to_dropbox(target_file_name, source_file, dropbox_token, dropbox_fold
     # Replace the '0' at the end of the url with '1' for direct download
     return re.sub('dl=.*', 'raw=1', r.json()['url'])
 
-
+send_email(options.zapier_hook, options.zapier_auth_prefix, options.zapier_auth, options.email_to, subject, body):
 def send_email(zapier_hook, zapier_auth_prefix, zapier_auth, to, subject, body):
     '''Send email with zapier hook
 
@@ -142,9 +142,9 @@ def send_email(zapier_hook, zapier_auth_prefix, zapier_auth, to, subject, body):
     # ZAPIER_SEND_DATA['subject'] = subject
     # ZAPIER_SEND_DATA['body'] = body
 
-    SENDGRID_EMAIL_DATA['personalizations']['to']['email'] = to
+    SENDGRID_EMAIL_DATA['personalizations'][0]['to'][0]['email'] = to
     SENDGRID_EMAIL_DATA['subject'] = subject
-    SENDGRID_EMAIL_DATA['content']['value'] = body
+    SENDGRID_EMAIL_DATA['content'][0]['value'] = body
 
     auth = zapier_auth_prefix + " " + zapier_auth
     headers = {'Authorization': auth}
