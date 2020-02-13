@@ -309,20 +309,6 @@ if __name__ == '__main__':
         exit(TEMPLATE_ERROR_CODE)
 
     '''
-    https://api.sendgrid.com/v3/mail/send
-    Bearer
-    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
-    devhadi@gmail.com
-    New AICEANDROID Release, Version 1.0
-    New version is available for download:
-    http://fileurl.co/asa.apk
-    Changes:
-    Removed:
-    - Google Maps Fragment
-    - Settings
-    Added:
-    - Cool blank page with text
-    This email was sent automatically, please do not reply.'''
     print(options.zapier_hook + "\n" + options.zapier_auth_prefix + "\n" + options.zapier_auth + "\n" + options.email_to + "\n" + subject + "\n" + body)
 
     # Send email with release data
