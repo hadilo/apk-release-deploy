@@ -55,6 +55,27 @@ ZAPIER_SEND_DATA = {
     'body': None
 }
 
+SENDGRID_EMAIL_DATA = {
+    "personalizations": [
+        {
+            "to": [
+                {
+                    "email": None
+                }
+            ]
+        }
+    ],
+    "from": {
+        "email": "akucinta@xx.com"
+    },
+    "subject": None,
+    "content": [
+        {
+            "type": "text/plain",
+            "value": None
+        }
+    ]
+}
 
 def upload_to_dropbox(target_file_name, source_file, dropbox_token, dropbox_folder):
     '''Upload file to dropbox
@@ -117,15 +138,19 @@ def send_email(zapier_hook, zapier_auth_prefix, zapier_auth, to, subject, body):
     Returns:
         bool: Send success/fail.
     '''
-    ZAPIER_SEND_DATA['to'] = to
-    ZAPIER_SEND_DATA['subject'] = subject
-    ZAPIER_SEND_DATA['body'] = body
+    # ZAPIER_SEND_DATA['to'] = to
+    # ZAPIER_SEND_DATA['subject'] = subject
+    # ZAPIER_SEND_DATA['body'] = body
+
+    aaa['personalizations']['to']['email'] = to
+    aaa['subject'] = subject
+    aaa['content']['value'] = body
 
     auth = zapier_auth_prefix + " " + zapier_auth
     headers = {'Authorization': auth}
     headers = {'Content-Type': 'application/json'}
 
-    r = requests.post(zapier_hook, data=json.dumps(ZAPIER_SEND_DATA), headers=headers)
+    r = requests.post(zapier_hook, data=json.dumps(aaa), headers=headers)
 
     return r.status_code == requests.codes.ok
 
@@ -283,7 +308,23 @@ if __name__ == '__main__':
     if subject == None or body == None:
         exit(TEMPLATE_ERROR_CODE)
 
+    '''
+    https://api.sendgrid.com/v3/mail/send
+    Bearer
+    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
+    devhadi@gmail.com
+    New AICEANDROID Release, Version 1.0
+    New version is available for download:
+    http://fileurl.co/asa.apk
+    Changes:
+    Removed:
+    - Google Maps Fragment
+    - Settings
+    Added:
+    - Cool blank page with text
+    This email was sent automatically, please do not reply.'''
     print(options.zapier_hook + "\n" + options.zapier_auth_prefix + "\n" + options.zapier_auth + "\n" + options.email_to + "\n" + subject + "\n" + body)
+
     # Send email with release data
     if not send_email(options.zapier_hook, options.zapier_auth_prefix, options.zapier_auth, options.email_to, subject, body):
         exit(ZAPIER_ERROR_CODE)
