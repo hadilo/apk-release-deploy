@@ -137,21 +137,15 @@ def send_email(zapier_hook, zapier_auth_prefix, zapier_auth, to, subject, body):
     Returns:
         bool: Send success/fail.
     '''
-    # ZAPIER_SEND_DATA['to'] = to
-    # ZAPIER_SEND_DATA['subject'] = subject
-    # ZAPIER_SEND_DATA['body'] = body
 
     SENDGRID_EMAIL_DATA['personalizations'][0]['to'][0]['email'] = to
     SENDGRID_EMAIL_DATA['subject'] = subject
     SENDGRID_EMAIL_DATA['content'][0]['value'] = "body"
 
     auth = zapier_auth_prefix + " " + zapier_auth
-    # headers = {}
     headers = {'Authorization': auth, 'Content-Type': 'application/json'}
 
-    print(auth + "\n" + json.dumps(SENDGRID_EMAIL_DATA))
-
-    r = requests.post("https://api.sendgrid.com/v3/mail/send", data=json.dumps(SENDGRID_EMAIL_DATA), headers=headers)
+    r = requests.post(zapier_hook, data=json.dumps(SENDGRID_EMAIL_DATA), headers=headers)
     print(r.status_code)
     return r.status_code == 202 #requests.codes.ok
 
