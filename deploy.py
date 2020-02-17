@@ -145,11 +145,17 @@ def send_email(zapier_hook, zapier_auth_prefix, zapier_auth, to, subject, body, 
         bool: Send success/fail.
     '''
 
-    source_file1 = source_file
-    print("attach1 " + source_file1)
-    with open(source_file1) as f:
-        mylist = list(f)
-    print("\nattach2 " + mylist)
+    print("attach1 " + source_file)
+    # with open(source_file1) as f:
+    #     mylist = list(f)
+    # print("\nattach2 " + mylist)
+
+    try:
+        with open(source_file) as f:
+            print(f.readlines())
+            # Do something with the file
+    except IOError:
+        print("File not accessible")
 
 
     # Get the Byte-Version of the image
