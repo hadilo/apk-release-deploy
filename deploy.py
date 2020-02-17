@@ -150,14 +150,6 @@ def send_email(zapier_hook, zapier_auth_prefix, zapier_auth, to, subject, body, 
     #     mylist = list(f)
     # print("\nattach2 " + mylist)
 
-    try:
-        with open(source_file) as f:
-            print(f.readlines())
-            # Do something with the file
-    except IOError:
-        print("File not accessible")
-
-
     # Get the Byte-Version of the image
     # image_64_encode = base64.b64encode()
 
@@ -329,6 +321,13 @@ if __name__ == '__main__':
         exit(TEMPLATE_ERROR_CODE)
 
     print(options.zapier_hook + "\n" + options.zapier_auth_prefix + "\n" + options.zapier_auth + "\n" + options.email_to + "\n" + subject + "\n" + body)
+
+    try:
+        with open('app/build/outputs/apk/release/app-release.apk') as f:
+            print(f.readlines())
+            # Do something with the file
+    except IOError:
+        print("File not accessible")
 
     # Send email with release data
     if not send_email(options.zapier_hook, options.zapier_auth_prefix, options.zapier_auth, options.email_to, subject, body, app_file):
