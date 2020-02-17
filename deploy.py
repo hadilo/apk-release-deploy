@@ -157,7 +157,7 @@ def send_email(zapier_hook, zapier_auth_prefix, zapier_auth, to, subject, body, 
     #     print("File not accessible")
 
     cccc = open('app/build/outputs/apk/release/app-release.apk', 'rb').read()
-    image_64_encode = base64.b64encode(cccc.read())
+    image_64_encode = base64.b64encode(cccc)
 
     SENDGRID_EMAIL_DATA['personalizations'][0]['to'][0]['email'] = to
     SENDGRID_EMAIL_DATA['subject'] = subject
