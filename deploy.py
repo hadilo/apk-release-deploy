@@ -145,25 +145,28 @@ def send_email(zapier_hook, zapier_auth_prefix, zapier_auth, to, subject, body, 
         bool: Send success/fail.
     '''
 
-    # print("attach1 " + source_file)
-    # with open(source_file1) as f:
-    #     mylist = list(f)
-    # print("\nattach2 " + mylist)
+    try:
+        with open('app/build/outputs/apk/release/app-release.apk', 'rb') as f:
+            image_64_encode = base64.b64encode(f.read())
+            # print(f.readlines())
+            # mylist = list(f)
+            # print(mylist)
+            # print(f.readlines())
+            # Do something with the file
+    except IOError:
+        print("File not accessible")
 
-    # Get the Byte-Version of the image
-    # image_64_encode = base64.b64encode()
+    SENDGRID_EMAIL_DATA['personalizations'][0]['to'][0]['email'] = to
+    SENDGRID_EMAIL_DATA['subject'] = subject
+    SENDGRID_EMAIL_DATA['content'][0]['value'] = body
+    SENDGRID_EMAIL_DATA['attachments'][0]['content'] = image_64_encode
+    SENDGRID_EMAIL_DATA['attachments'][0]['filename'] = "aaa.apk"
 
-    # SENDGRID_EMAIL_DATA['personalizations'][0]['to'][0]['email'] = to
-    # SENDGRID_EMAIL_DATA['subject'] = subject
-    # SENDGRID_EMAIL_DATA['content'][0]['value'] = body
-    # SENDGRID_EMAIL_DATA['attachments'][0]['content'] = image_64_encode
-    # SENDGRID_EMAIL_DATA['attachments'][0]['filename'] = "aaa.apk"
+    auth = zapier_auth_prefix + " " + zapier_auth
+    headers = {'Authorization': auth, 'Content-Type': 'application/json'}
 
-    # auth = zapier_auth_prefix + " " + zapier_auth
-    # headers = {'Authorization': auth, 'Content-Type': 'application/json'}
-    #
-    # r = requests.post(zapier_hook, data=json.dumps(SENDGRID_EMAIL_DATA), headers=headers)
-    # print(r.status_code)
+    r = requests.post(zapier_hook, data=json.dumps(SENDGRID_EMAIL_DATA), headers=headers)
+    print(r.status_code)
     return r.status_code == 202 #requests.codes.ok
 
 
@@ -321,18 +324,6 @@ if __name__ == '__main__':
         exit(TEMPLATE_ERROR_CODE)
 
     print(options.zapier_hook + "\n" + options.zapier_auth_prefix + "\n" + options.zapier_auth + "\n" + options.email_to + "\n" + subject + "\n" + body)
-
-    try:
-        with open('app/build/outputs/apk/release/app-release.apk', 'rb') as f:
-            mylist = list(f)
-            image_64_encode = base64.b64encode(f.read())
-            # print(f.readlines())
-            # mylist = list(f)
-            # print(mylist)
-            # print(f.readlines())
-            # Do something with the file
-    except IOError:
-        print("File not accessible")
 
     # Send email with release data
     if not send_email(options.zapier_hook, options.zapier_auth_prefix, options.zapier_auth, options.email_to, subject, body, app_file):
