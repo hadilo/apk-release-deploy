@@ -74,7 +74,13 @@ SENDGRID_EMAIL_DATA = {
             "type": "text/plain",
             "value": None
         }
-    ]
+    ],
+    "attachments": [
+       {
+           "content": None,
+           "filename": None
+       }
+   ]
 }
 
 def upload_to_dropbox(target_file_name, source_file, dropbox_token, dropbox_folder):
@@ -125,7 +131,7 @@ def upload_to_dropbox(target_file_name, source_file, dropbox_token, dropbox_fold
     # Replace the '0' at the end of the url with '1' for direct download
     return re.sub('dl=.*', 'raw=1', r.json()['url'])
 
-def send_email(zapier_hook, zapier_auth_prefix, zapier_auth, to, subject, body):
+def send_email(zapier_hook, zapier_auth_prefix, zapier_auth, to, subject, body, attach):
     '''Send email with zapier hook
 
     Args:
@@ -141,6 +147,8 @@ def send_email(zapier_hook, zapier_auth_prefix, zapier_auth, to, subject, body):
     SENDGRID_EMAIL_DATA['personalizations'][0]['to'][0]['email'] = to
     SENDGRID_EMAIL_DATA['subject'] = subject
     SENDGRID_EMAIL_DATA['content'][0]['value'] = body
+    SENDGRID_EMAIL_DATA['attachments'][0]['content'] = attach
+    SENDGRID_EMAIL_DATA['attachments'][0]['filename'] = "aaa.apk"
 
     auth = zapier_auth_prefix + " " + zapier_auth
     headers = {'Authorization': auth, 'Content-Type': 'application/json'}
@@ -306,5 +314,5 @@ if __name__ == '__main__':
     print(options.zapier_hook + "\n" + options.zapier_auth_prefix + "\n" + options.zapier_auth + "\n" + options.email_to + "\n" + subject + "\n" + body)
 
     # Send email with release data
-    if not send_email(options.zapier_hook, options.zapier_auth_prefix, options.zapier_auth, options.email_to, subject, body):
+    if not send_email(options.zapier_hook, options.zapier_auth_prefix, options.zapier_auth, options.email_to, subject, body, app_file):
         exit(ZAPIER_ERROR_CODE)
