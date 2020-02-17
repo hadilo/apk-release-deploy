@@ -150,12 +150,12 @@ def send_email(zapier_hook, zapier_auth_prefix, zapier_auth, to, subject, body, 
     #     mylist = list(f)
     # print("\nattach2 " + mylist)
 
-    try:
-        with open(source_file) as f:
-            print(f.readlines())
-            # Do something with the file
-    except IOError:
-        print("File not accessible")
+    # try:
+    #     with open(source_file) as f:
+    #         print(f.readlines())
+    #         # Do something with the file
+    # except IOError:
+    #     print("File not accessible")
 
 
     # Get the Byte-Version of the image
