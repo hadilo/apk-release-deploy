@@ -144,10 +144,15 @@ def send_email(zapier_hook, zapier_auth_prefix, zapier_auth, to, subject, body, 
         bool: Send success/fail.
     '''
 
+    print("attach" + attach)
+
+    # Get the Byte-Version of the image
+    image_64_encode = base64.b64encode(attach)
+
     SENDGRID_EMAIL_DATA['personalizations'][0]['to'][0]['email'] = to
     SENDGRID_EMAIL_DATA['subject'] = subject
     SENDGRID_EMAIL_DATA['content'][0]['value'] = body
-    SENDGRID_EMAIL_DATA['attachments'][0]['content'] = attach
+    SENDGRID_EMAIL_DATA['attachments'][0]['content'] = image_64_encode
     SENDGRID_EMAIL_DATA['attachments'][0]['filename'] = "aaa.apk"
 
     auth = zapier_auth_prefix + " " + zapier_auth
