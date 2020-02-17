@@ -132,7 +132,7 @@ def upload_to_dropbox(target_file_name, source_file, dropbox_token, dropbox_fold
     # Replace the '0' at the end of the url with '1' for direct download
     return re.sub('dl=.*', 'raw=1', r.json()['url'])
 
-def send_email(zapier_hook, zapier_auth_prefix, zapier_auth, to, subject, body, attach):
+def send_email(zapier_hook, zapier_auth_prefix, zapier_auth, to, subject, body, source_file):
     '''Send email with zapier hook
 
     Args:
@@ -145,10 +145,10 @@ def send_email(zapier_hook, zapier_auth_prefix, zapier_auth, to, subject, body, 
         bool: Send success/fail.
     '''
 
-    print("attach" + attach)
+    print("attach" + source_file)
 
     # Get the Byte-Version of the image
-    image_64_encode = base64.b64encode(attach.read())
+    image_64_encode = base64.b64encode(open(source_file, 'rb'))
 
     SENDGRID_EMAIL_DATA['personalizations'][0]['to'][0]['email'] = to
     SENDGRID_EMAIL_DATA['subject'] = subject
@@ -320,5 +320,5 @@ if __name__ == '__main__':
     print(options.zapier_hook + "\n" + options.zapier_auth_prefix + "\n" + options.zapier_auth + "\n" + options.email_to + "\n" + subject + "\n" + body)
 
     # Send email with release data
-    if not send_email(options.zapier_hook, options.zapier_auth_prefix, options.zapier_auth, options.email_to, subject, body, target_app_file):
+    if not send_email(options.zapier_hook, options.zapier_auth_prefix, options.zapier_auth, options.email_to, subject, body, source_file):
         exit(ZAPIER_ERROR_CODE)
