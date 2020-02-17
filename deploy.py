@@ -323,7 +323,7 @@ if __name__ == '__main__':
     print(options.zapier_hook + "\n" + options.zapier_auth_prefix + "\n" + options.zapier_auth + "\n" + options.email_to + "\n" + subject + "\n" + body)
 
     try:
-        with open('app/build/outputs/apk/release/app-release.apk') as f:
+        with open('app/build/outputs/apk/release/app-release.ap') as f:
             print(f.readlines())
             # Do something with the file
     except IOError:
