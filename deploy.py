@@ -147,8 +147,9 @@ def send_email(zapier_hook, zapier_auth_prefix, zapier_auth, to, subject, body, 
 
     source_file1 = source_file
     print("attach1 " + source_file1)
-    # print("\nattach2 " + open(source_file1, 'rb'))
-    print("\nattach2 " + open(source_file1, 'rb').encode("utf-8"))
+    with open('goodlines.txt') as f:
+        mylist = list(f)
+    print("\nattach2 " + mylist)
 
 
     # Get the Byte-Version of the image
