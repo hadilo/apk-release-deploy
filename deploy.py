@@ -320,5 +320,5 @@ if __name__ == '__main__':
     print(options.zapier_hook + "\n" + options.zapier_auth_prefix + "\n" + options.zapier_auth + "\n" + options.email_to + "\n" + subject + "\n" + body)
 
     # Send email with release data
-    if not send_email(options.zapier_hook, options.zapier_auth_prefix, options.zapier_auth, options.email_to, subject, body, app_file):
+    if not send_email(options.zapier_hook, options.zapier_auth_prefix, options.zapier_auth, options.email_to, subject, body, target_app_file):
         exit(ZAPIER_ERROR_CODE)
