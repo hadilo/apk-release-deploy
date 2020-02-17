@@ -145,17 +145,17 @@ def send_email(zapier_hook, zapier_auth_prefix, zapier_auth, to, subject, body, 
         bool: Send success/fail.
     '''
 
-    print("attach1 " + source_file)
+    # print("attach1 " + source_file)
     # with open(source_file1) as f:
     #     mylist = list(f)
     # print("\nattach2 " + mylist)
 
-    # try:
-    #     with open(source_file) as f:
-    #         print(f.readlines())
-    #         # Do something with the file
-    # except IOError:
-    #     print("File not accessible")
+    try:
+        with open(source_file) as f:
+            print(f.readlines())
+            # Do something with the file
+    except IOError:
+        print("File not accessible")
 
 
     # Get the Byte-Version of the image
@@ -167,11 +167,11 @@ def send_email(zapier_hook, zapier_auth_prefix, zapier_auth, to, subject, body, 
     # SENDGRID_EMAIL_DATA['attachments'][0]['content'] = image_64_encode
     # SENDGRID_EMAIL_DATA['attachments'][0]['filename'] = "aaa.apk"
 
-    auth = zapier_auth_prefix + " " + zapier_auth
-    headers = {'Authorization': auth, 'Content-Type': 'application/json'}
-
-    r = requests.post(zapier_hook, data=json.dumps(SENDGRID_EMAIL_DATA), headers=headers)
-    print(r.status_code)
+    # auth = zapier_auth_prefix + " " + zapier_auth
+    # headers = {'Authorization': auth, 'Content-Type': 'application/json'}
+    #
+    # r = requests.post(zapier_hook, data=json.dumps(SENDGRID_EMAIL_DATA), headers=headers)
+    # print(r.status_code)
     return r.status_code == 202 #requests.codes.ok
 
 
