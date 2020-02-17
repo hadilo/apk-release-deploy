@@ -148,7 +148,7 @@ def send_email(zapier_hook, zapier_auth_prefix, zapier_auth, to, subject, body, 
     print("attach" + attach)
 
     # Get the Byte-Version of the image
-    image_64_encode = base64.b64encode(attach)
+    image_64_encode = base64.b64encode(attach.read())
 
     SENDGRID_EMAIL_DATA['personalizations'][0]['to'][0]['email'] = to
     SENDGRID_EMAIL_DATA['subject'] = subject
