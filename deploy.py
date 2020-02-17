@@ -144,17 +144,20 @@ def send_email(zapier_hook, zapier_auth_prefix, zapier_auth, to, subject, body, 
     Returns:
         bool: Send success/fail.
     '''
-
-    try:
-        with open('app/build/outputs/apk/release/app-release.apk', 'rb') as f:
-            image_64_encode = base64.b64encode(f.read())
+    # image_64_encode = None
+    # try:
+    #     with open('app/build/outputs/apk/release/app-release.apk', 'rb') as f:
+    #         image_64_encode = base64.b64encode(f.read())
             # print(f.readlines())
             # mylist = list(f)
             # print(mylist)
             # print(f.readlines())
             # Do something with the file
-    except IOError:
-        print("File not accessible")
+    # except IOError:
+    #     print("File not accessible")
+
+    cccc = open('app/build/outputs/apk/release/app-release.apk', 'rb').read()
+    image_64_encode = base64.b64encode(cccc.read())
 
     SENDGRID_EMAIL_DATA['personalizations'][0]['to'][0]['email'] = to
     SENDGRID_EMAIL_DATA['subject'] = subject
@@ -323,7 +326,7 @@ if __name__ == '__main__':
     if subject == None or body == None:
         exit(TEMPLATE_ERROR_CODE)
 
-    print(options.zapier_hook + "\n" + options.zapier_auth_prefix + "\n" + options.zapier_auth + "\n" + options.email_to + "\n" + subject + "\n" + body)
+    # print(options.zapier_hook + "\n" + options.zapier_auth_prefix + "\n" + options.zapier_auth + "\n" + options.email_to + "\n" + subject + "\n" + body)
 
     # Send email with release data
     if not send_email(options.zapier_hook, options.zapier_auth_prefix, options.zapier_auth, options.email_to, subject, body, app_file):
