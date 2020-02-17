@@ -147,7 +147,7 @@ def send_email(zapier_hook, zapier_auth_prefix, zapier_auth, to, subject, body, 
 
     source_file1 = source_file
     print("attach1 " + source_file1)
-    with open('goodlines.txt') as f:
+    with open(source_file1) as f:
         mylist = list(f)
     print("\nattach2 " + mylist)
 
