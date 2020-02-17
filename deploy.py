@@ -325,7 +325,7 @@ if __name__ == '__main__':
     try:
         with open('app/build/outputs/apk/release/app-release.apk', 'rb') as f:
             mylist = list(f)
-            image_64_encode = base64.b64encode(f.readlines().encode('utf-8'))
+            image_64_encode = base64.b64encode(f.read())
             # print(f.readlines())
             # mylist = list(f)
             # print(mylist)
