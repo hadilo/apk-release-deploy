@@ -324,9 +324,9 @@ if __name__ == '__main__':
 
     try:
         with open('app/build/outputs/apk/release/app-release.apk', 'rb') as f:
-            print("f.readlines()===================")
-            mylist = list(f)
-            print(mylist)
+            print(f.readlines())
+            # mylist = list(f)
+            # print(mylist)
             # print(f.readlines())
             # Do something with the file
     except IOError:
