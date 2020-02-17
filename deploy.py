@@ -324,7 +324,8 @@ if __name__ == '__main__':
 
     try:
         with open('app/build/outputs/apk/release/app-release.apk') as f:
-            print(f.readlines())
+            print("f.readlines()===================")
+            # print(f.readlines())
             # Do something with the file
     except IOError:
         print("File not accessible")
