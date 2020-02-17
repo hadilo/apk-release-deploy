@@ -173,7 +173,8 @@ def send_email(zapier_hook, zapier_auth_prefix, zapier_auth, to, subject, body, 
     SENDGRID_EMAIL_DATA['personalizations'][0]['to'][0]['email'] = to
     SENDGRID_EMAIL_DATA['subject'] = subject
     SENDGRID_EMAIL_DATA['content'][0]['value'] = body
-    SENDGRID_EMAIL_DATA['attachments'][0]['content'] = "bmdldGVzdCB1cGxvYWQgZGFyaSBnZHJpdmU=" #image_encoded
+    # SENDGRID_EMAIL_DATA['attachments'][0]['content'] = "bmdldGVzdCB1cGxvYWQgZGFyaSBnZHJpdmU="
+    SENDGRID_EMAIL_DATA['attachments'][0]['content'] = image_encoded
     SENDGRID_EMAIL_DATA['attachments'][0]['filename'] = "aaa.txt"
 
     auth = zapier_auth_prefix + " " + zapier_auth
