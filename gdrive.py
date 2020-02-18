@@ -11,6 +11,8 @@ from googleapiclient.http import MediaFileUpload
 
 SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly']
 
+options = None
+
 def main():
     """Shows basic usage of the Drive v3 API.
     Prints the names and ids of the first 10 files the user has access to.
@@ -27,8 +29,8 @@ def main():
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                'client_secrets.json', SCOPES) #client_secrets_file
+            # flow = InstalledAppFlow.from_client_secrets_file('client_secrets.json', SCOPES) #client_secrets_file
+            flow = InstalledAppFlow.from_client_secrets_file(options.client_secrets_file, SCOPES)  # client_secrets_file
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
         with open('token.pickle', 'wb') as token:
@@ -48,6 +50,7 @@ def main():
         for item in items:
             print(u'{0} ({1})'.format(item['name'], item['id']))
 
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--release.dir', dest='release_dir', help='path to release folder', required=True)
@@ -60,7 +63,7 @@ if __name__ == '__main__':
     parser.add_argument('--zapier.authprefix', dest='zapier_auth_prefix', help='zapier email web hook prefix',required=True)
     parser.add_argument('--zapier.auth', dest='zapier_auth', help='zapier email web hook key', required=True)
     parser.add_argument('--email.to', dest='email_to', help='email recipients', required=True)
-    parser.add_argument('--client_secrets.file', dest='release_dir', help='path to release folder', required=True)
+    parser.add_argument('--client_secrets.file', dest='client_secrets_file', help='path to release folder', required=True)
 
     options = parser.parse_args()
     main()
