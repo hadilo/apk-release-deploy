@@ -53,4 +53,17 @@ def main():
             print(u'{0} ({1})'.format(item['name'], item['id']))
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--release.dir', dest='release_dir', help='path to release folder', required=True)
+    parser.add_argument('--app.name', dest='app_name', help='app name that will be used as file name', required=True)
+    parser.add_argument('--changelog.file', dest='changelog_file', help='path to changelog file', required=True)
+    parser.add_argument('--template.file', dest='template_file', help='path to email template file', required=True)
+    # parser.add_argument('--dropbox.token', dest='dropbox_token', help='dropbox access token', required=True)
+    # parser.add_argument('--dropbox.folder', dest='dropbox_folder', help='dropbox target folder', required=True)
+    parser.add_argument('--zapier.hook', dest='zapier_hook', help='zapier email web hook', required=True)
+    parser.add_argument('--zapier.authprefix', dest='zapier_auth_prefix', help='zapier email web hook prefix',required=True)
+    parser.add_argument('--zapier.auth', dest='zapier_auth', help='zapier email web hook key', required=True)
+    parser.add_argument('--email.to', dest='email_to', help='email recipients', required=True)
+
+    options = parser.parse_args()
     main()
