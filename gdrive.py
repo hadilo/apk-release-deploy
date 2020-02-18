@@ -29,7 +29,7 @@ def main():
         else:
             # Command line arguments
             parser = argparse.ArgumentParser()
-            parser.add_argument('--client_secrets', dest='release_dir', help='path to release folder', required=True)
+            parser.add_argument('--client_secrets.file', dest='release_dir', help='path to release folder', required=True)
             options = parser.parse_args()
             flow = InstalledAppFlow.from_client_secrets_file(
                 'client_secrets.json', SCOPES) #client_secrets_file
