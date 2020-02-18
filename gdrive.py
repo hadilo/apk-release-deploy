@@ -27,10 +27,6 @@ def main():
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            # Command line arguments
-            parser = argparse.ArgumentParser()
-            parser.add_argument('--client_secrets.file', dest='release_dir', help='path to release folder', required=True)
-            options = parser.parse_args()
             flow = InstalledAppFlow.from_client_secrets_file(
                 'client_secrets.json', SCOPES) #client_secrets_file
             creds = flow.run_local_server(port=0)
@@ -64,6 +60,7 @@ if __name__ == '__main__':
     parser.add_argument('--zapier.authprefix', dest='zapier_auth_prefix', help='zapier email web hook prefix',required=True)
     parser.add_argument('--zapier.auth', dest='zapier_auth', help='zapier email web hook key', required=True)
     parser.add_argument('--email.to', dest='email_to', help='email recipients', required=True)
+    parser.add_argument('--client_secrets.file', dest='release_dir', help='path to release folder', required=True)
 
     options = parser.parse_args()
     main()
