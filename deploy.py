@@ -299,7 +299,7 @@ if __name__ == '__main__':
     file_id = upload(drive_service, target_app_file, app_file)
     shareFile(drive_service, file_id, options.email_to)
     fileUploaded = getListAll(drive_service)
-    file_url = fileUploaded.g('webContentLink')
+    file_url = fileUploaded.get('webContentLink')
 
 
     # Upload app file and get shared url
