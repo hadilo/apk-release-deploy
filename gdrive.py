@@ -57,6 +57,7 @@ def upload(drive_service, name, file):
     media = MediaFileUpload(file)
     file = drive_service.files().create(body=file_metadata, media_body=media, fields='id').execute()
     print('File ID: %s' % file.get('id'))
+    return file.get('id')
 
 # Call the Drive v3 API
 def getListAll(drive_service):
