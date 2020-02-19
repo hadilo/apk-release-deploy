@@ -76,13 +76,7 @@ SENDGRID_EMAIL_DATA = {
             "type": "text/plain",
             "value": None
         }
-    ],
-    "attachments": [
-       {
-           "content": None,
-           "filename": None
-       }
-   ]
+    ]
 }
 
 def upload_to_dropbox(target_file_name, source_file, dropbox_token, dropbox_folder):
