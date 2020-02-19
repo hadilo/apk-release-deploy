@@ -61,7 +61,7 @@ def upload(drive_service, name, file):
 
 # Call the Drive v3 API
 def getListAll(drive_service):
-    results = drive_service.files().list(pageSize=1,
+    results = drive_service.files().list(pageSize=10,
                                          fields="files(id, name, webContentLink, webViewLink, createdTime)").execute()
     items = results.get('files', [])
 
@@ -96,5 +96,5 @@ if __name__ == '__main__':
 
     # download(drive_service, "1HwwsnULoutorJWR3LVf7eZVgNWkKkXyC")
 
-    # delete_file(drive_service, '1cbLtrv2ViXbwap9c7NKsg8spPOeXrlUX')
+    # delete_file(drive_service, '1q4U4kla488OK4mCWIfTPbDworM7J4-nb')
 
