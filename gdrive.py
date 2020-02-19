@@ -86,7 +86,7 @@ def getDriveService(client_secrets_file):
     return drive_service
 
 if __name__ == '__main__':
-    drive_service = getDriveService()
+    drive_service = getDriveService('service.json')
     getListAll(drive_service)
     # shareFile(drive_service, "1OdfAi6nLS9-voOu-0qzx1njoP-HzYjhR", "example@mail.com")
     # upload(drive_service, "LICENSE", "LICENSE")

@@ -295,9 +295,9 @@ if __name__ == '__main__':
     target_app_file = get_target_file_name(options.app_name, app_version)
 
     #Upload app ke google drive
-    drive_service = getDriveService(client_secrets_file)
+    drive_service = getDriveService(options.client_secrets_file)
     file_id = upload(drive_service, target_app_file, app_file)
-    shareFile(drive_service, file_id, "read")
+    shareFile(drive_service, file_id, options.email_to)
     fileUploaded = getListAll(drive_service)
     file_url = fileUploaded.g('webContentLink')
 
