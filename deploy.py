@@ -299,7 +299,8 @@ if __name__ == '__main__':
     file_id = upload(drive_service, target_app_file, app_file)
     shareFile(drive_service, file_id, options.email_to)
     fileUploaded = getListAll(drive_service)
-    file_url = fileUploaded.get('webContentLink')
+    file_url = fileUploaded['webContentLink']
+    print("url download " + file_url)
 
 
     # Upload app file and get shared url
@@ -312,12 +313,13 @@ if __name__ == '__main__':
     if latest_changes == None:
         exit(CHANGES_ERROR_CODE)
 
+    print("1=================")
+
     subject, body = get_email(options.app_name, app_version, file_url, latest_changes, options.template_file)
     if subject == None or body == None:
         exit(TEMPLATE_ERROR_CODE)
 
-
-
+    print("1=================")
     # print(options.zapier_hook + "\n" + options.zapier_auth_prefix + "\n" + options.zapier_auth + "\n" + options.email_to + "\n" + subject + "\n" + body)
 
     # Send email with release data

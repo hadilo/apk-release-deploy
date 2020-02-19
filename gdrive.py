@@ -88,7 +88,8 @@ def getDriveService(client_secrets_file):
 
 if __name__ == '__main__':
     drive_service = getDriveService('service.json')
-    getListAll(drive_service)
+    aaaa = getListAll(drive_service)
+    print("link " + aaaa['webContentLink'])
     # shareFile(drive_service, "1OdfAi6nLS9-voOu-0qzx1njoP-HzYjhR", "example@mail.com")
     # upload(drive_service, "LICENSE", "LICENSE")
     # upload(drive_service, "service.json", "service.json")
