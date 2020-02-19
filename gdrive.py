@@ -16,13 +16,13 @@ def callback(request_id, response, exception):
     if exception:
         print(exception)
     else:
-        print("Permission Id: %s" % response.get('id'))
+        print("Permission Id: %s" % response)
 
 def shareFile(drive_service, file_id, email):
     batch = drive_service.new_batch_http_request(callback=callback)
     user_permission = {
         'type': 'user',
-        'role': 'writer',
+        'role': 'reader',
         'emailAddress': email
     }
     batch.add(drive_service.permissions().create(
@@ -55,12 +55,13 @@ def download(drive_service, file_id):
 def upload(drive_service, name, file):
     file_metadata = {'name': name}
     media = MediaFileUpload(file)
-    file = drive_service.files().create(body=file_metadata,media_body=media,fields='id').execute()
+    file = drive_service.files().create(body=file_metadata, media_body=media, fields='id').execute()
     print('File ID: %s' % file.get('id'))
 
 # Call the Drive v3 API
 def getListAll(drive_service):
-    results = drive_service.files().list(pageSize=10, fields="files(id, name, webContentLink, webViewLink)").execute()
+    results = drive_service.files().list(pageSize=1,
+                                         fields="files(id, name, webContentLink, webViewLink, createdTime)").execute()
     items = results.get('files', [])
 
     if not items:
@@ -70,8 +71,9 @@ def getListAll(drive_service):
         for item in items:
             print(item)
 
+    return items[0] #get first item
 
-if __name__ == '__main__':
+def getDriveService():
     from google.oauth2 import service_account
 
     # SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly']
@@ -79,12 +81,18 @@ if __name__ == '__main__':
     SERVICE_ACCOUNT_FILE = 'service.json'
     credentials = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
 
-    # delegated_credentials = credentials.with_subject('devhadi@gmail.com')
+    # delegated_credentials = credentials.with_subject('example@mail.com')
     drive_service = build('drive', 'v3', credentials=credentials)
+    return drive_service
 
+if __name__ == '__main__':
+    drive_service = getDriveService()
     getListAll(drive_service)
+    # shareFile(drive_service, "1OdfAi6nLS9-voOu-0qzx1njoP-HzYjhR", "example@mail.com")
+    # upload(drive_service, "LICENSE", "LICENSE")
+    # upload(drive_service, "service.json", "service.json")
 
     # download(drive_service, "1HwwsnULoutorJWR3LVf7eZVgNWkKkXyC")
 
-    # delete_file(drive_service, "1HwwsnULoutorJWR3LVf7eZVgNWkKkXyC")
+    # delete_file(drive_service, '1cbLtrv2ViXbwap9c7NKsg8spPOeXrlUX')
 
