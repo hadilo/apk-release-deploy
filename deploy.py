@@ -283,6 +283,7 @@ if __name__ == '__main__':
     parser.add_argument('--zapier.authprefix', dest='zapier_auth_prefix', help='zapier email web hook prefix', required=True)
     parser.add_argument('--zapier.auth', dest='zapier_auth', help='zapier email web hook key', required=True)
     parser.add_argument('--email.to', dest='email_to', help='email recipients', required=True)
+    parser.add_argument('--client_secrets.file', dest='client_secrets_file', help='email recipients', required=True)
 
     options = parser.parse_args()
 
@@ -294,7 +295,7 @@ if __name__ == '__main__':
     target_app_file = get_target_file_name(options.app_name, app_version)
 
     #Upload app ke google drive
-    drive_service = getDriveService()
+    drive_service = getDriveService(client_secrets_file)
     file_id = upload(drive_service, target_app_file, app_file)
     shareFile(drive_service, file_id, "read")
     fileUploaded = getListAll(drive_service)

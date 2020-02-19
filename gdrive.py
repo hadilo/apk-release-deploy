@@ -73,12 +73,12 @@ def getListAll(drive_service):
 
     return items[0] #get first item
 
-def getDriveService():
+def getDriveService(client_secrets_file):
     from google.oauth2 import service_account
 
     # SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly']
     SCOPES = ['https://www.googleapis.com/auth/drive']
-    SERVICE_ACCOUNT_FILE = 'service.json'
+    SERVICE_ACCOUNT_FILE = client_secrets_file #'service.json'
     credentials = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
 
     # delegated_credentials = credentials.with_subject('example@mail.com')
