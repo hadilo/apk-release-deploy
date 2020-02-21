@@ -214,7 +214,8 @@ if __name__ == '__main__':
     options = parser.parse_args()
     print("2==============")
     print(options.email_to)
-    for email in options.email_to:
+
+    for email in json.load(options.email_to):
         print(email)
     # Extract app version and file
     app_version, app_file = get_app(options.release_dir)
