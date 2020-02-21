@@ -17,8 +17,8 @@ This script is the last stage for Android CI/CD process and may be helpful in fo
 
 ## How does it work
 ### API
-This project is using Dropbox for APK storage and Zapier for sending emails.
-You will need Dropbox API key and Zapier hook URL.
+This project is using Dropbox for APK storage and sendgrid for sending emails.
+You will need Dropbox API key and sendgrid hook URL.
 ### Changes
 Changes are extracted from provides CHANGEOG file. Each version change should end with '##' and begin with a title, that starts with '#' char. Example:
 ```
@@ -84,6 +84,6 @@ python3 deploy.py \
     --dropbox.folder=build \
     --changelog.file=CHANGELOG \
     --template.file=template_file \
-    --zapier.hook=$ZAPIER_HOOK \
+    --sendgrid.hook=$sendgrid_HOOK \
     --email.to=me@myorg.com,them@myorg.com
 ```
