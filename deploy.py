@@ -240,4 +240,4 @@ if __name__ == '__main__':
     # Send email with release data
     if not send_email(options.sendgrid_hook, options.sendgrid_auth_prefix, options.sendgrid_auth, options.email_to, subject, body):
         exit(SENDGRID_ERROR_CODE)
-print("8==============")
+    print("8==============")

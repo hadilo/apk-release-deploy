@@ -23,6 +23,7 @@ def shareFile(drive_service, file_id, emails):
     batch = drive_service.new_batch_http_request(callback=callback)
 
     for email in emails:
+        print(email['email'])
         user_permission = {
             'type': 'user',
             'role': 'reader',
