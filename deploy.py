@@ -25,37 +25,10 @@ import base64
 from gdrive import *
 
 DROPBOX_ERROR_CODE = 1
-ZAPIER_ERROR_CODE = 2
+SENDGRID_ERROR_CODE = 2
 TEMPLATE_ERROR_CODE = 3
 CHANGES_ERROR_CODE = 4
 OUTPUT_FILE_PARSING_ERROR = 5
-
-DROPBOX_UPLOAD_ARGS = {
-    'path': None,
-    'mode': 'overwrite',
-    'autorename': True,
-    'strict_conflict': True
-}
-DROPBOX_UPLOAD_URL = 'https://content.dropboxapi.com/2/files/upload'
-
-DROPBOX_SHARE_DATA = {
-    'path': None,
-    'settings': {
-        'requested_visibility': 'public'
-    }
-}
-DROPBOX_SHARE_URL = 'https://api.dropboxapi.com/2/sharing/create_shared_link_with_settings'
-
-DROPBOX_DELETE_DATA = {
-    'path' : None
-}
-DROPBOX_DELETE_URL = 'https://api.dropboxapi.com/2/files/delete_v2'
-
-ZAPIER_SEND_DATA = {
-    'to': None,
-    'subject': None,
-    'body': None
-}
 
 SENDGRID_EMAIL_DATA = {
     "personalizations": [
@@ -79,59 +52,11 @@ SENDGRID_EMAIL_DATA = {
     ]
 }
 
-def upload_to_dropbox(target_file_name, source_file, dropbox_token, dropbox_folder):
-    '''Upload file to dropbox
+def send_email(sendgrid_hook, sendgrid_auth_prefix, sendgrid_auth, to, subject, body):
+    '''Send email with sendgrid hook
 
     Args:
-        target_file_name (str): Uploaded file will be rename to this file name.
-        source_file (str): File that is going to be uploaded.
-        dropbox_token (str): Dropbox API key.
-        dropbox_folder (str): Dropbox target folder.
-
-    Returns:
-        str: Shared url for download.
-    '''
-    dropbox_path = '/{folder}/{file_name}'.format(folder=dropbox_folder, file_name=target_file_name)
-    DROPBOX_UPLOAD_ARGS['path'] = dropbox_path
-    DROPBOX_SHARE_DATA['path'] = dropbox_path
-    DROPBOX_DELETE_DATA['path'] = dropbox_path
-
-    # Try to delete the file before upload
-    # It's possible to overwrite but this way is cleaner
-    headers = {'Authorization': 'Bearer ' + dropbox_token,
-            'Content-Type': 'application/json'}
-
-    requests.post(DROPBOX_DELETE_URL, data=json.dumps(DROPBOX_DELETE_DATA), headers=headers)
-
-    headers = {'Authorization': 'Bearer ' + dropbox_token,
-               'Dropbox-API-Arg': json.dumps(DROPBOX_UPLOAD_ARGS),
-               'Content-Type': 'application/octet-stream'}
-
-    # Upload the file
-    r = requests.post(DROPBOX_UPLOAD_URL, data=open(source_file, 'rb'), headers=headers)
-
-    if r.status_code != requests.codes.ok:
-        print("Failed: upload file to Dropbox: {errcode}".format(errcode=r.status_code))
-        return None
-
-    headers = {'Authorization': 'Bearer ' + dropbox_token,
-               'Content-Type': 'application/json'}
-
-    # Share and return downloadable url
-    r = requests.post(DROPBOX_SHARE_URL, data=json.dumps(DROPBOX_SHARE_DATA), headers=headers)
-
-    if r.status_code != requests.codes.ok:
-        print("Failed: get share link from Dropbox {errcode}".format(errcode=r.status_code))
-        return None
-
-    # Replace the '0' at the end of the url with '1' for direct download
-    return re.sub('dl=.*', 'raw=1', r.json()['url'])
-
-def send_email(zapier_hook, zapier_auth_prefix, zapier_auth, to, subject, body, source_file):
-    '''Send email with zapier hook
-
-    Args:
-        zapier_hook (str): Zapier hook url.
+        sendgrid_hook (str): sendgrid hook url.
         to (str): Email recipients separated by comma.
         subject (str): Email subject.
         body (str): Email body.
@@ -139,14 +64,14 @@ def send_email(zapier_hook, zapier_auth_prefix, zapier_auth, to, subject, body, 
     Returns:
         bool: Send success/fail.
     '''
-    SENDGRID_EMAIL_DATA['personalizations'][0]['to'][0]['email'] = to
+    SENDGRID_EMAIL_DATA['personalizations'][0]['to'] = to
     SENDGRID_EMAIL_DATA['subject'] = subject
     SENDGRID_EMAIL_DATA['content'][0]['value'] = body
 
-    auth = zapier_auth_prefix + " " + zapier_auth
+    auth = sendgrid_auth_prefix + " " + sendgrid_auth
     headers = {'Authorization': auth, 'Content-Type': 'application/json'}
 
-    r = requests.post(zapier_hook, data=json.dumps(SENDGRID_EMAIL_DATA), headers=headers)
+    r = requests.post(sendgrid_hook, data=json.dumps(SENDGRID_EMAIL_DATA), headers=headers)
     print(r.status_code)
     return r.status_code == 202 #requests.codes.ok
 
@@ -263,6 +188,14 @@ def get_email(app_name, app_version, app_url, changes, template_file_path):
 
     return subject.rstrip(), body.rstrip()
 
+def upload_gdrive():
+    drive_service = getDriveService(options.client_secrets_file)
+    file_id = upload(drive_service, target_app_file, app_file)
+    shareFile(drive_service, file_id, options.email_to)
+    fileUploaded = getListAll(drive_service)
+    file_url = fileUploaded['webContentLink']
+    print("url download " + file_url)
+    return file_url
 
 if __name__ == '__main__':
     # Command line arguments
@@ -271,11 +204,9 @@ if __name__ == '__main__':
     parser.add_argument('--app.name', dest='app_name', help='app name that will be used as file name', required=True)
     parser.add_argument('--changelog.file', dest='changelog_file', help='path to changelog file', required=True)
     parser.add_argument('--template.file', dest='template_file', help='path to email template file', required=True)
-    # parser.add_argument('--dropbox.token', dest='dropbox_token', help='dropbox access token', required=True)
-    # parser.add_argument('--dropbox.folder', dest='dropbox_folder', help='dropbox target folder', required=True)
-    parser.add_argument('--zapier.hook', dest='zapier_hook', help='zapier email web hook', required=True)
-    parser.add_argument('--zapier.authprefix', dest='zapier_auth_prefix', help='zapier email web hook prefix', required=True)
-    parser.add_argument('--zapier.auth', dest='zapier_auth', help='zapier email web hook key', required=True)
+    parser.add_argument('--sendgrid.hook', dest='sendgrid_hook', help='sendgrid email web hook', required=True)
+    parser.add_argument('--sendgrid.authprefix', dest='sendgrid_auth_prefix', help='sendgrid email web hook prefix', required=True)
+    parser.add_argument('--sendgrid.auth', dest='sendgrid_auth', help='sendgrid email web hook key', required=True)
     parser.add_argument('--email.to', dest='email_to', help='email recipients', required=True)
     parser.add_argument('--client_secrets.file', dest='client_secrets_file', help='email recipients', required=True)
 
@@ -288,34 +219,22 @@ if __name__ == '__main__':
 
     target_app_file = get_target_file_name(options.app_name, app_version)
 
-    #Upload app ke google drive
-    drive_service = getDriveService(options.client_secrets_file)
-    file_id = upload(drive_service, target_app_file, app_file)
-    shareFile(drive_service, file_id, options.email_to)
-    fileUploaded = getListAll(drive_service)
-    file_url = fileUploaded['webContentLink']
-    print("url download " + file_url)
-
-
     # Upload app file and get shared url
-    # file_url = upload_to_dropbox(target_app_file, app_file, options.dropbox_token, options.dropbox_folder)
-    # if file_url == None:
-    #     exit(DROPBOX_ERROR_CODE)
+    file_url = upload_gdrive()
+    if file_url == None:
+        exit(DROPBOX_ERROR_CODE)
 
     # Extract latest changes
     latest_changes = get_changes(options.changelog_file)
     if latest_changes == None:
         exit(CHANGES_ERROR_CODE)
 
-    print("1=================")
-
     subject, body = get_email(options.app_name, app_version, file_url, latest_changes, options.template_file)
     if subject == None or body == None:
         exit(TEMPLATE_ERROR_CODE)
 
-    print("1=================")
-    # print(options.zapier_hook + "\n" + options.zapier_auth_prefix + "\n" + options.zapier_auth + "\n" + options.email_to + "\n" + subject + "\n" + body)
+    print(options.sendgrid_hook + "\n" + options.sendgrid_auth_prefix + "\n" + options.sendgrid_auth + "\n" + options.email_to + "\n" + subject + "\n" + body)
 
     # Send email with release data
-    if not send_email(options.zapier_hook, options.zapier_auth_prefix, options.zapier_auth, options.email_to, subject, body, app_file):
-        exit(ZAPIER_ERROR_CODE)
+    if not send_email(options.sendgrid_hook, options.sendgrid_auth_prefix, options.sendgrid_auth, options.email_to, subject, body):
+        exit(SENDGRID_ERROR_CODE)

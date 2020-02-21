@@ -1,6 +1,7 @@
 from __future__ import print_function
 
 import io
+import json
 import pickle
 import os.path
 from googleapiclient.discovery import build
@@ -18,18 +19,20 @@ def callback(request_id, response, exception):
     else:
         print("Permission Id: %s" % response)
 
-def shareFile(drive_service, file_id, email):
+def shareFile(drive_service, file_id, emails):
     batch = drive_service.new_batch_http_request(callback=callback)
-    user_permission = {
-        'type': 'user',
-        'role': 'reader',
-        'emailAddress': email
-    }
-    batch.add(drive_service.permissions().create(
-            fileId=file_id,
-            body=user_permission,
-            fields='id',
-    ))
+
+    for email in emails:
+        user_permission = {
+            'type': 'user',
+            'role': 'reader',
+            'emailAddress': email['email']
+        }
+        batch.add(drive_service.permissions().create(
+                fileId=file_id,
+                body=user_permission,
+                fields='id',
+        ))
     batch.execute()
 
 def delete_file(drive_service, file_id):
