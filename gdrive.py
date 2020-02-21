@@ -133,6 +133,9 @@ if __name__ == '__main__':
     # SENDGRID_EMAIL_DATA['personalizations'][0]['to'] = emailJson
     #
     # print(json.dumps(SENDGRID_EMAIL_DATA, ensure_ascii=False))
-    for email in emailJson:
+
+    # for email in options.email_to:
+    #     print(email)
+    for email in json.loads(emailJson):
         print(email['email'])
 
