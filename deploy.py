@@ -68,6 +68,8 @@ def send_email(sendgrid_hook, sendgrid_auth_prefix, sendgrid_auth, to, subject, 
     SENDGRID_EMAIL_DATA['subject'] = subject
     SENDGRID_EMAIL_DATA['content'][0]['value'] = body
 
+    print(SENDGRID_EMAIL_DATA)
+
     auth = sendgrid_auth_prefix + " " + sendgrid_auth
     headers = {'Authorization': auth, 'Content-Type': 'application/json'}
 
