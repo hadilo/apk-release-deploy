@@ -22,7 +22,6 @@ def callback(request_id, response, exception):
 def shareFile(drive_service, file_id, emails):
     batch = drive_service.new_batch_http_request(callback=callback)
 
-    emails = json.loads(emails)
     for email in emails:
         print(email['email'])
         user_permission = {

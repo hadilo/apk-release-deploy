@@ -190,10 +190,10 @@ def get_email(app_name, app_version, app_url, changes, template_file_path):
 
     return subject.rstrip(), body.rstrip()
 
-def upload_gdrive():
+def upload_gdrive(jsonEmail):
     drive_service = getDriveService(options.client_secrets_file)
     file_id = upload(drive_service, target_app_file, app_file)
-    shareFile(drive_service, file_id, options.email_to)
+    shareFile(drive_service, file_id, jsonEmail)
     fileUploaded = getListAll(drive_service)
     file_url = fileUploaded['webContentLink']
     print("url download " + file_url)
@@ -215,8 +215,8 @@ if __name__ == '__main__':
 
     options = parser.parse_args()
     print("2==============")
-    print(options.email_to)
 
+    jsonEmail = json.loads(options.email_to)
 
     # Extract app version and file
     app_version, app_file = get_app(options.release_dir)
@@ -226,7 +226,7 @@ if __name__ == '__main__':
     target_app_file = get_target_file_name(options.app_name, app_version)
     print("4==============")
     # Upload app file and get shared url
-    file_url = upload_gdrive()
+    file_url = upload_gdrive(jsonEmail)
     if file_url == None:
         exit(DROPBOX_ERROR_CODE)
     print("5==============")
@@ -242,6 +242,6 @@ if __name__ == '__main__':
     # print(options.sendgrid_hook + "\n" + options.sendgrid_auth_prefix + "\n" + options.sendgrid_auth + "\n" + options.email_to + "\n" + subject + "\n" + body)
 
     # Send email with release data
-    if not send_email(options.sendgrid_hook, options.sendgrid_auth_prefix, options.sendgrid_auth, options.email_to, subject, body):
+    if not send_email(options.sendgrid_hook, options.sendgrid_auth_prefix, options.sendgrid_auth, jsonEmail, subject, body):
         exit(SENDGRID_ERROR_CODE)
     print("8==============")
