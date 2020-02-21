@@ -22,19 +22,19 @@ def callback(request_id, response, exception):
 def shareFile(drive_service, file_id, emails):
     batch = drive_service.new_batch_http_request(callback=callback)
 
-    for email in emails:
-        print(email['email'])
-        user_permission = {
-            'type': 'user',
-            'role': 'reader',
-            'emailAddress': email['email']
-        }
-        batch.add(drive_service.permissions().create(
-                fileId=file_id,
-                body=user_permission,
-                fields='id',
-        ))
-    batch.execute()
+    for ema in emails:
+        print(ema['email'])
+    #     user_permission = {
+    #         'type': 'user',
+    #         'role': 'reader',
+    #         'emailAddress': email['email']
+    #     }
+    #     batch.add(drive_service.permissions().create(
+    #             fileId=file_id,
+    #             body=user_permission,
+    #             fields='id',
+    #     ))
+    # batch.execute()
 
 def delete_file(drive_service, file_id):
   """Permanently delete a file, skipping the trash.
@@ -90,15 +90,49 @@ def getDriveService(client_secrets_file):
     drive_service = build('drive', 'v3', credentials=credentials)
     return drive_service
 
+emailJson = [{"email":"devhadi@gmail.com"},{"email":"hadi@alterra.id"}]
+
 if __name__ == '__main__':
-    drive_service = getDriveService('service.json')
-    aaaa = getListAll(drive_service)
-    print("link " + aaaa['webContentLink'])
-    # shareFile(drive_service, "1OdfAi6nLS9-voOu-0qzx1njoP-HzYjhR", "example@mail.com")
+    # drive_service = getDriveService('service.json')
+    # aaaa = getListAll(drive_service)
+    # print("link " + aaaa['webContentLink'])
     # upload(drive_service, "LICENSE", "LICENSE")
+    # shareFile(drive_service, "1tO8ESwp1cfnBLWxOlPvOC8poZ7SNZnSZ", emailJson)
     # upload(drive_service, "service.json", "service.json")
 
     # download(drive_service, "1HwwsnULoutorJWR3LVf7eZVgNWkKkXyC")
 
     # delete_file(drive_service, '1q4U4kla488OK4mCWIfTPbDworM7J4-nb')
+
+    # print(emailJson)
+    # for element in emailJson['email']:
+    #     print(element)
+
+    # SENDGRID_EMAIL_DATA = {
+    #     "personalizations": [
+    #         {
+    #             "to": [
+    #                 {
+    #                     "email": None
+    #                 }
+    #             ]
+    #         }
+    #     ],
+    #     "from": {
+    #         "email": "akucinta@xx.com"
+    #     },
+    #     "subject": None,
+    #     "content": [
+    #         {
+    #             "type": "text/plain",
+    #             "value": None
+    #         }
+    #     ]
+    # }
+    #
+    # SENDGRID_EMAIL_DATA['personalizations'][0]['to'] = emailJson
+    #
+    # print(json.dumps(SENDGRID_EMAIL_DATA, ensure_ascii=False))
+    for email in emailJson:
+        print(email['email'])
 
