@@ -22,19 +22,20 @@ def callback(request_id, response, exception):
 def shareFile(drive_service, file_id, emails):
     batch = drive_service.new_batch_http_request(callback=callback)
 
-    for ema in emails:
-        print(ema['email'])
-    #     user_permission = {
-    #         'type': 'user',
-    #         'role': 'reader',
-    #         'emailAddress': email['email']
-    #     }
-    #     batch.add(drive_service.permissions().create(
-    #             fileId=file_id,
-    #             body=user_permission,
-    #             fields='id',
-    #     ))
-    # batch.execute()
+    emails = json.loads(emails)
+    for email in emails:
+        print(email['email'])
+        user_permission = {
+            'type': 'user',
+            'role': 'reader',
+            'emailAddress': email['email']
+        }
+        batch.add(drive_service.permissions().create(
+                fileId=file_id,
+                body=user_permission,
+                fields='id',
+        ))
+    batch.execute()
 
 def delete_file(drive_service, file_id):
   """Permanently delete a file, skipping the trash.
@@ -90,9 +91,7 @@ def getDriveService(client_secrets_file):
     drive_service = build('drive', 'v3', credentials=credentials)
     return drive_service
 
-emailJson = [{"email":"devhadi@gmail.com"},{"email":"hadi@alterra.id"}]
-
-if __name__ == '__main__':
+# if __name__ == '__main__':
     # drive_service = getDriveService('service.json')
     # aaaa = getListAll(drive_service)
     # print("link " + aaaa['webContentLink'])
@@ -133,9 +132,4 @@ if __name__ == '__main__':
     # SENDGRID_EMAIL_DATA['personalizations'][0]['to'] = emailJson
     #
     # print(json.dumps(SENDGRID_EMAIL_DATA, ensure_ascii=False))
-
-    # for email in options.email_to:
-    #     print(email)
-    for email in json.loads(emailJson):
-        print(email['email'])
 

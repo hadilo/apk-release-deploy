@@ -215,9 +215,7 @@ if __name__ == '__main__':
     print("2==============")
     print(options.email_to)
 
-    emails = json.loads(options.email_to)
-    for email in emails:
-        print(email['email'])
+
     # Extract app version and file
     app_version, app_file = get_app(options.release_dir)
     if app_version == None or app_file == None:
