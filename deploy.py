@@ -17,11 +17,8 @@
 
 
 import os
-import argparse
 import requests
-import json
 import re
-import base64
 from gdrive import *
 
 DROPBOX_ERROR_CODE = 1
@@ -41,7 +38,7 @@ SENDGRID_EMAIL_DATA = {
         }
     ],
     "from": {
-        "email": "akucinta@xx.com"
+        "email": None
     },
     "subject": None,
     "content": [
@@ -52,7 +49,7 @@ SENDGRID_EMAIL_DATA = {
     ]
 }
 
-def send_email(sendgrid_hook, sendgrid_auth_prefix, sendgrid_auth, to, subject, body):
+def send_email(sendgrid_hook, sendgrid_auth_prefix, sendgrid_auth, emailFrom, emailTo, subject, body):
     '''Send email with sendgrid hook
 
     Args:
@@ -64,7 +61,8 @@ def send_email(sendgrid_hook, sendgrid_auth_prefix, sendgrid_auth, to, subject, 
     Returns:
         bool: Send success/fail.
     '''
-    SENDGRID_EMAIL_DATA['personalizations'][0]['to'] = to
+    SENDGRID_EMAIL_DATA['from']['email'] = emailFrom
+    SENDGRID_EMAIL_DATA['personalizations'][0]['to'] = emailTo
     SENDGRID_EMAIL_DATA['subject'] = subject
     SENDGRID_EMAIL_DATA['content'][0]['value'] = body
 
@@ -210,8 +208,9 @@ if __name__ == '__main__':
     parser.add_argument('--sendgrid.hook', dest='sendgrid_hook', help='sendgrid email web hook', required=True)
     parser.add_argument('--sendgrid.authprefix', dest='sendgrid_auth_prefix', help='sendgrid email web hook prefix', required=True)
     parser.add_argument('--sendgrid.auth', dest='sendgrid_auth', help='sendgrid email web hook key', required=True)
+    parser.add_argument('--email.from', dest='email_from', help='email recipients', required=True)
     parser.add_argument('--email.to', dest='email_to', help='email recipients', required=True)
-    parser.add_argument('--client_secrets.file', dest='client_secrets_file', help='email recipients', required=True)
+    parser.add_argument('--client_secrets.file', dest='client_secrets_file', help='account_client gdrive secret file', required=True)
 
     options = parser.parse_args()
     print("2==============")
@@ -242,6 +241,6 @@ if __name__ == '__main__':
     # print(options.sendgrid_hook + "\n" + options.sendgrid_auth_prefix + "\n" + options.sendgrid_auth + "\n" + options.email_to + "\n" + subject + "\n" + body)
 
     # Send email with release data
-    if not send_email(options.sendgrid_hook, options.sendgrid_auth_prefix, options.sendgrid_auth, jsonEmail, subject, body):
+    if not send_email(options.sendgrid_hook, options.sendgrid_auth_prefix, options.sendgrid_auth, "", jsonEmail, subject, body):
         exit(SENDGRID_ERROR_CODE)
     print("8==============")
