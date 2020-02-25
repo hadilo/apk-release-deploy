@@ -199,7 +199,7 @@ def upload_gdrive(jsonEmail):
 
 if __name__ == '__main__':
     # Command line arguments
-    print("1==============")
+    print("log 1, ==============")
     parser = argparse.ArgumentParser()
     parser.add_argument('--release.dir', dest='release_dir', help='path to release folder', required=True)
     parser.add_argument('--app.name', dest='app_name', help='app name that will be used as file name', required=True)
@@ -213,7 +213,8 @@ if __name__ == '__main__':
     parser.add_argument('--client_secrets.file', dest='client_secrets_file', help='account_client gdrive secret file', required=True)
 
     options = parser.parse_args()
-    print("2==============")
+
+    print("log 2, ==============")
 
     jsonEmailTo = json.loads(options.email_to)
 
@@ -221,26 +222,32 @@ if __name__ == '__main__':
     app_version, app_file = get_app(options.release_dir)
     if app_version == None or app_file == None:
         exit(OUTPUT_FILE_PARSING_ERROR)
-    print("3==============")
+
+    print("log 3, ==============")
+
     target_app_file = get_target_file_name(options.app_name, app_version)
-    print("4==============")
+
+    print("log 4, ==============")
     # Upload app file and get shared url
     file_url = upload_gdrive(jsonEmailTo)
     if file_url == None:
         exit(DROPBOX_ERROR_CODE)
-    print("5==============")
+
+    print("log 5, ==============")
+
     # Extract latest changes
     latest_changes = get_changes(options.changelog_file)
     if latest_changes == None:
         exit(CHANGES_ERROR_CODE)
-    print("6==============")
+
+    print("log 6, ==============")
+
     subject, body = get_email(options.app_name, app_version, file_url, latest_changes, options.template_file)
     if subject == None or body == None:
         exit(TEMPLATE_ERROR_CODE)
-    print("7==============")
-    # print(options.sendgrid_hook + "\n" + options.sendgrid_auth_prefix + "\n" + options.sendgrid_auth + "\n" + options.email_to + "\n" + subject + "\n" + body)
+    print("log 7, ==============")
 
     # Send email with release data
     if not send_email(options.sendgrid_hook, options.sendgrid_auth_prefix, options.sendgrid_auth, options.email_from, jsonEmailTo, subject, body):
         exit(SENDGRID_ERROR_CODE)
-    print("8==============")
+    print("log 8, ==============")

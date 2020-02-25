@@ -92,15 +92,15 @@ def getDriveService(client_secrets_file):
 
 # if __name__ == '__main__':
     # drive_service = getDriveService('service.json')
-    # aaaa = getListAll(drive_service)
-    # print("link " + aaaa['webContentLink'])
     # upload(drive_service, "LICENSE", "LICENSE")
     # shareFile(drive_service, "1tO8ESwp1cfnBLWxOlPvOC8poZ7SNZnSZ", emailJson)
     # upload(drive_service, "service.json", "service.json")
 
     # download(drive_service, "1HwwsnULoutorJWR3LVf7eZVgNWkKkXyC")
 
-    # delete_file(drive_service, '1q4U4kla488OK4mCWIfTPbDworM7J4-nb')
+    # delete_file(drive_service, '1LFwfj9UWMrvICUzd1TvnxNF_Crx9zDuj')
+    # aaaa = getListAll(drive_service)
+    # print("link " + aaaa['webContentLink'])
 
     # print(emailJson)
     # for element in emailJson['email']:
