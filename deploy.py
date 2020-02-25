@@ -215,7 +215,7 @@ if __name__ == '__main__':
     options = parser.parse_args()
     print("2==============")
 
-    jsonEmail = json.loads(options.email_to)
+    jsonEmailTo = json.loads(options.email_to)
 
     # Extract app version and file
     app_version, app_file = get_app(options.release_dir)
@@ -225,7 +225,7 @@ if __name__ == '__main__':
     target_app_file = get_target_file_name(options.app_name, app_version)
     print("4==============")
     # Upload app file and get shared url
-    file_url = upload_gdrive(jsonEmail)
+    file_url = upload_gdrive(jsonEmailTo)
     if file_url == None:
         exit(DROPBOX_ERROR_CODE)
     print("5==============")
@@ -241,6 +241,6 @@ if __name__ == '__main__':
     # print(options.sendgrid_hook + "\n" + options.sendgrid_auth_prefix + "\n" + options.sendgrid_auth + "\n" + options.email_to + "\n" + subject + "\n" + body)
 
     # Send email with release data
-    if not send_email(options.sendgrid_hook, options.sendgrid_auth_prefix, options.sendgrid_auth, "", jsonEmail, subject, body):
+    if not send_email(options.sendgrid_hook, options.sendgrid_auth_prefix, options.sendgrid_auth, options.email_from, jsonEmailTo, subject, body):
         exit(SENDGRID_ERROR_CODE)
     print("8==============")
